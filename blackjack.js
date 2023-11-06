@@ -1,4 +1,145 @@
+
+
+
+
+
+
 // const blackjackDeck = getDeck();
+
+const getDeck = () => {
+  const suits = ['hearts', 'spades', 'clubs', 'diamonds'];
+  const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
+  const deck = [];
+
+  for (let i = 0; i < suits.length; i++) {
+    const suit = suits[i];
+    for (let j = 0; j < values.length; j++) {
+      const value = values[j];
+      let val;
+
+      if (value === 'Ace') {
+        val = 11;
+      } else if (['Jack', 'Queen', 'King'].includes(value)) {
+        val = 10;
+      } else {
+        val = parseInt(value, 10);
+      }
+
+      const card = {
+        val: val,
+        displayVal: value,
+        suit: suit,
+      };
+      deck.push(card);
+    }
+  }
+
+  return deck;
+};
+
+class CardPlayer {
+  constructor(name) {
+    this.name = name;
+    this.hand = [];
+  }
+
+  drawCard(deck) {
+    const randomIndex = Math.floor(Math.random() * deck.length);
+    const card = deck.splice(randomIndex, 1)[0];
+    this.hand.push(card);
+  }
+}
+undefined
+const startGame = function() {
+  // Create 'Player' and 'Dealer' instances of CardPlayer
+  const player = new CardPlayer('Player');
+  const dealer = new CardPlayer('Dealer');
+
+  // Function to calculate points in a hand
+  const calcPoints = (hand) => {
+  let total = 0;
+  let numAces = 0;
+
+  for (const card of hand) {
+    total += card.val;
+    if (card.displayVal === 'Ace') {
+      numAces++;
+    }
+  }
+
+  // Handle Aces as either 1 or 11 based on the total points
+  while (numAces > 0 && total > 21) {
+    total -= 10; // Change the value of an Ace from 11 to 1
+    numAces--;
+  }
+
+  return { total };
+}
+
+  // Function to show the current hand of a player
+  const showHand = (player) => {
+    console.log(`${player.name}'s hand:`);
+    for (const card of player.hand) {
+      console.log(`${card.displayVal} of ${card.suit}`);
+    }
+  }
+
+  // Function to get a message based on player score and dealer's face-up card
+  const getMessage = (playerScore, dealerCard) => {
+  if (playerScore === 21) {
+    return 'Blackjack!';
+  } else if (playerScore > 21) {
+    return 'Bust! You lose.';
+  } else if (dealerCard.val === 11 && playerScore >= 17) {
+    return 'Dealer has an Ace. Stand or draw?';
+  } else {
+    return 'Draw or stand.';
+  }
+}
+
+  // Function to determine if the dealer should draw a card
+ const dealerShouldDraw = (dealerHand) => {
+  const dealerScore = calcPoints(dealerHand);
+  return dealerScore.total < 17 || (dealerScore.total === 17 && dealerScore.isSoft);
+}
+
+  // Function to determine the winner
+  const determineWinner = (playerScore, dealerScore) => {
+  if (playerScore > 21) {
+    return `Player Busts: Player ${playerScore}, Dealer ${dealerScore}. Dealer Wins!`;
+  } else if (dealerScore > 21 || playerScore > dealerScore) {
+    return `Player Wins: Player ${playerScore}, Dealer ${dealerScore}.`;
+  } else if (playerScore === dealerScore) {
+    return `It's a tie: Player ${playerScore}, Dealer ${dealerScore}.`;
+  } else {
+    return `Dealer Wins: Player ${playerScore}, Dealer ${dealerScore}.`;
+  }
+}
+
+  // Initial game setup
+  player.drawCard(getDeck());
+  dealer.drawCard(getDeck());
+  player.drawCard(getDeck());
+  dealer.drawCard(getDeck());
+
+  let playerScore = calcPoints(player.hand).total;
+  while (playerScore < 17) {
+    player.drawCard(getDeck());
+    playerScore = calcPoints(player.hand).total;
+  }
+
+  let dealerScore = calcPoints(dealer.hand).total;
+  while (dealerScore < 17) {
+    dealer.drawCard(getDeck());
+    dealerScore = calcPoints(dealer.hand).total;
+  }
+
+  return determineWinner(playerScore, dealerScore);
+};
+
+console.log(startGame());
+
+
 
 // /**
 //  * Represents a card player (including dealer).
@@ -98,3 +239,4 @@
 //   return determineWinner(playerScore, dealerScore);
 // }
 // // console.log(startGame());
+
