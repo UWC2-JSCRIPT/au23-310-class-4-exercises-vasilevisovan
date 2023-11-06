@@ -52,6 +52,17 @@ const cards = [
   { val: 10, displayVal: 'King', suit: 'spades' },
   { val: 11, displayVal: 'Ace', suit: 'spades' }
 ];
+ 
+const logCardDeck = (deck) => {
+  for (const card of deck) {
+    console.log(`Value: ${card.val}`);
+    console.log(`Display Value: ${card.displayVal}`);
+    console.log(`Suit: ${card.suit}`);
+    console.log('---');
+  }
+}
+
+logCardDeck(cards);
 
 /**
  * Logs every property of every card to the console
