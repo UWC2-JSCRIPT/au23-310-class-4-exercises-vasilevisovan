@@ -98,3 +98,114 @@
 //   return determineWinner(playerScore, dealerScore);
 // }
 // // console.log(startGame());
+
+const getDeck = () => {
+    const suits = ['hearts', 'spades', 'clubs', 'diamonds'];
+    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
+    const deck = [];
+  
+    for (let i = 0; i < suits.length; i++) {
+      const suit = suits[i];
+      for (let j = 0; j < values.length; j++) {
+        const value = values[j];
+        let val;
+  
+        if (value === 'Ace') {
+          val = 11;
+        } else if (['Jack', 'Queen', 'King'].includes(value)) {
+          val = 10;
+        } else {
+          val = parseInt(value, 10);
+        }
+  
+        const card = {
+          val: val,
+          displayVal: value,
+          suit: suit,
+        };
+        deck.push(card);
+      }
+    }
+  
+    return deck;
+  };
+  
+  class CardPlayer {
+    constructor(name) {
+      this.name = name;
+      this.hand = [];
+    }
+  
+    drawCard(deck) {
+      const randomIndex = Math.floor(Math.random() * deck.length);
+      const card = deck.splice(randomIndex, 1)[0];
+      this.hand.push(card);
+    }
+  }
+  undefined
+  const startGame = function() {
+    // Create 'Player' and 'Dealer' instances of CardPlayer
+    const player = new CardPlayer('Player');
+    const dealer = new CardPlayer('Dealer');
+  
+    // Function to calculate points in a hand
+    function calcPoints(hand) {
+      // Implement this function to calculate points based on the rules of your game.
+    }
+  
+    // Function to show the current hand of a player
+    function showHand(player) {
+      console.log(`${player.name}'s hand:`);
+      for (const card of player.hand) {
+        console.log(`${card.displayVal} of ${card.suit}`);
+      }
+    }
+  
+    // Function to get a message based on player score and dealer's face-up card
+    function getMessage(playerScore, dealerCard) {
+      // Implement this function to provide appropriate messages based on game rules.
+    }
+  
+    // Function to determine if the dealer should draw a card
+    function dealerShouldDraw(dealerHand) {
+      // Implement this function to determine if the dealer should draw a card based on game rules.
+    }
+  
+    // Function to determine the winner
+    function determineWinner(playerScore, dealerScore) {
+      // Implement this function to determine the winner based on game rules.
+    }
+  
+    // Initial game setup
+    player.drawCard(getDeck());
+    dealer.drawCard(getDeck());
+    player.drawCard(getDeck());
+    dealer.drawCard(getDeck());
+  
+    let playerScore = calcPoints(player.hand).total;
+    showHand(player);
+    while (playerScore < 21 && confirm(getMessage(playerScore, dealer.hand[0]))) {
+      player.drawCard(getDeck());
+      playerScore = calcPoints(player.hand).total;
+      showHand(player);
+    }
+    if (playerScore > 21) {
+      return 'You went over 21 - you lose!';
+    }
+    console.log(`Player stands at ${playerScore}`);
+  
+    let dealerScore = calcPoints(dealer.hand).total;
+    while (dealerScore < 21 && dealerShouldDraw(dealer.hand)) {
+      dealer.drawCard(getDeck());
+      dealerScore = calcPoints(dealer.hand).total;
+      showHand(dealer);
+    }
+    if (dealerScore > 21) {
+      return 'Dealer went over 21 - you win!';
+    }
+    console.log(`Dealer stands at ${dealerScore}`);
+  
+    return determineWinner(playerScore, dealerScore);
+  };
+  
+  console.log(startGame());
